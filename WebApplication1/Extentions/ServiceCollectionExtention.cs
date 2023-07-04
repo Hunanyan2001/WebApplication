@@ -11,7 +11,7 @@ namespace WebApplication1.Extentions
         public static void AddService(this IServiceCollection services)
         {
             services.AddScoped<IUserRepositary, UserRepositary>();
-            services.AddScoped<IAccountManger, AccountManger>();
+            services.AddScoped<IAccountManager, AccountManager>();
         }
 
         public static void AddDbContext(this WebApplicationBuilder builder)

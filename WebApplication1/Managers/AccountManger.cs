@@ -2,7 +2,7 @@
 
 namespace WebApplication1.Managers
 {
-    public class AccountManger : IAccountManger
+    public class AccountManager : IAccountManager
     {
         public Task ChangePasswordAsync(string userId, string newPassword)
         {

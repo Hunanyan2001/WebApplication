@@ -2,7 +2,7 @@
 
 namespace WebApplication1.Managers
 {
-    public interface IAccountManger
+    public interface IAccountManager
     {
         Task<User> RegisterUserAsync(RegisterUserModel user);
         Task<User> LoginUserAsync(LoginUserModel user);
