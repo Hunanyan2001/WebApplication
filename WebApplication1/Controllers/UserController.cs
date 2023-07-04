@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
+using WebApplication1.DBContexts;
 using WebApplication1.Managers;
 using WebApplication1.Models;
 using WebApplication1.Repositary;
@@ -61,6 +62,15 @@ namespace WebApplication1.Controllers
 
             // Return the user
             return Ok(user);
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            // Get all users from the repository
+            IEnumerable<User> users = await _userRepository.GetAllUsersAsync();
+
+            // Return the list of users
+            return Ok(users);
         }
     }
 }

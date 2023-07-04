@@ -1,22 +1,53 @@
-﻿using WebApplication1.Models;
+﻿using Microsoft.EntityFrameworkCore;
+
+using WebApplication1.DBContexts;
+using WebApplication1.Models;
 
 namespace WebApplication1.Managers
 {
     public class AccountManager : IAccountManager
     {
-        public Task ChangePasswordAsync(string userId, string newPassword)
+        private readonly UserContext _userContext;
+
+        public AccountManager(UserContext userContext)
         {
-            throw new NotImplementedException();
+            _userContext = userContext; 
+        }
+        public async Task ChangePasswordAsync(string userId, string newPassword)
+        {
+            User user = await _userContext.Users.FindAsync(userId).ConfigureAwait(false);
+            if (user == null)
+            {
+                // Handle user not found scenario
+            }
+
+            user.Password = newPassword;
+
+            await _userContext.SaveChangesAsync();
         }
 
-        public Task<User> LoginUserAsync(LoginUserModel user)
+        public async Task<User> LoginUserAsync(LoginUserModel user)
         {
-            throw new NotImplementedException();
+            User loggedInUser = await _userContext.Users.FirstOrDefaultAsync(u => u.Email == user.Email && u.Password == user.Password).ConfigureAwait(false);
+
+            return loggedInUser;
         }
 
-        public Task<User> RegisterUserAsync(RegisterUserModel user)
+        public async Task<User> RegisterUserAsync(RegisterUserModel user)
         {
-            throw new NotImplementedException();
+            User newUser = new User
+            {
+                UserName = user.UserName,
+                Password = user.Password,
+                Email = user.Email,
+            };
+
+            // Add the new user to the user context
+            _userContext.Users.Add(newUser);
+
+            await _userContext.SaveChangesAsync();
+
+            return newUser;
         }
     }
 }
