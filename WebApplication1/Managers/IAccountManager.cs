@@ -1,4 +1,5 @@
-﻿using WebApplication1.Models;
+﻿using WebApplication1.Entity;
+using WebApplication1.Models;
 
 namespace WebApplication1.Managers
 {
@@ -6,6 +7,8 @@ namespace WebApplication1.Managers
     {
         Task<User> RegisterUserAsync(RegisterUserModel user);
         Task<User> LoginUserAsync(LoginUserModel user);
-        Task ChangePasswordAsync(string userId, string newPassword);
+        Task ChangePasswordAsync(int userId, string newPassword);
+        Task<IEnumerable<User>> GetAllUsersAsync();
+        Task<User> GetUserByIdAsync(int userId);
     }
 }

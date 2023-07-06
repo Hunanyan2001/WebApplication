@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-using WebApplication1.DBContexts;
+using WebApplication1.Entity;
+using WebApplication1.Logging;
 using WebApplication1.Managers;
 using WebApplication1.Models;
 using WebApplication1.Repositary;
@@ -13,63 +14,52 @@ namespace WebApplication1.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly IUserRepositary _userRepository;
         private readonly IAccountManager _accountManager;
 
-        public UserController(IUserRepositary userRepository, IAccountManager accountManager)
+        public UserController(IAccountManager accountManager)
         {
-            _userRepository = userRepository;
             _accountManager = accountManager;
         }
 
-        [HttpPost]
+        [HttpPost("register")]
         public async Task<IActionResult> RegisterUser(RegisterUserModel userRegisterModel)
         {
-            // Register the user using the account manager
-            User registeredUser = await _accountManager.RegisterUserAsync(userRegisterModel);
+            User registeredUser = await _accountManager.RegisterUserAsync(userRegisterModel).ConfigureAwait(false);
 
-            // Return the registered user
             return Ok(registeredUser);
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> LoginUser(LoginUserModel userLoginModel)
         {
-            // Login the user using the account manager
-            User loggedInUser = await _accountManager.LoginUserAsync(userLoginModel);
+            User loggedInUser = await _accountManager.LoginUserAsync(userLoginModel).ConfigureAwait(false);
 
             if (loggedInUser == null)
             {
-                // User login failed
                 return BadRequest("Invalid username or password");
             }
 
-            // User login successful
             return Ok(loggedInUser);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetUserById(string id)
+        public async Task<IActionResult> GetUserById(int id)
         {
-            // Get the user by ID from the repository
-            User user = await _userRepository.GetUserByIdAsync(id);
+            User user = await _accountManager.GetUserByIdAsync(id).ConfigureAwait(false);
 
             if (user == null)
             {
-                // User not found
                 return NotFound();
             }
 
-            // Return the user
+
             return Ok(user);
         }
         [HttpGet]
         public async Task<IActionResult> GetAllUsers()
         {
-            // Get all users from the repository
-            IEnumerable<User> users = await _userRepository.GetAllUsersAsync();
+            IEnumerable<User> users = await _accountManager.GetAllUsersAsync().ConfigureAwait(false);
 
-            // Return the list of users
             return Ok(users);
         }
     }

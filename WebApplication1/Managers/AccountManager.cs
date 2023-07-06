@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
 using WebApplication1.DBContexts;
+using WebApplication1.Entity;
+using WebApplication1.Logging;
 using WebApplication1.Models;
 
 namespace WebApplication1.Managers
@@ -13,7 +15,8 @@ namespace WebApplication1.Managers
         {
             _userContext = userContext; 
         }
-        public async Task ChangePasswordAsync(string userId, string newPassword)
+
+        public async Task ChangePasswordAsync(int userId, string newPassword)
         {
             User user = await _userContext.Users.FindAsync(userId).ConfigureAwait(false);
             if (user == null)
@@ -24,6 +27,16 @@ namespace WebApplication1.Managers
             user.Password = newPassword;
 
             await _userContext.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<User>> GetAllUsersAsync()
+        {
+            return await _userContext.Users.ToListAsync().ConfigureAwait(false);
+        }
+
+        public async Task<User> GetUserByIdAsync(int userId)
+        {
+            return await _userContext.Users.FindAsync(userId).ConfigureAwait(false);
         }
 
         public async Task<User> LoginUserAsync(LoginUserModel user)

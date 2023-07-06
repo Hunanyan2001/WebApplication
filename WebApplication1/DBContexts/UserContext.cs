@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-
-using WebApplication1.Models;
+using WebApplication1.Entity;
 
 namespace WebApplication1.DBContexts
 {
@@ -11,6 +10,8 @@ namespace WebApplication1.DBContexts
 
         }
         public DbSet<User> Users { get; set; }
+
+        public DbSet<Log> Logs { get; set; }
         //public DbSet<Transaction> Transactions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
